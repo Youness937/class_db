@@ -1,41 +1,22 @@
-# Nom de l'exécutable final
-EXEC = bdd_c
-
-# Liste des fichiers sources
-SRC = main.c
-
-# Liste des fichiers objets (correspond à SRC mais avec extension .o)
-OBJ = $(SRC:.c=.o)
-
-# Flags de compilation
+CC = gcc
 CFLAGS = -Wall -Wextra -g
 
-# Compilateur
-CC = gcc
+# Noms des fichiers objets et de l'exécutable
+OBJS = main.o
+EXEC = bdd_c
 
-# Règle par défaut pour générer l'exécutable
-all: $(EXEC)
+# Règle par défaut pour créer l'exécutable
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) -o $(EXEC) $(OBJS)
 
-# Règle pour créer l'exécutable en liant les objets
-$(EXEC): $(OBJ)
-	$(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
+# Compilation de main.o
+main.o: main.c
+	$(CC) $(CFLAGS) -c main.c
 
-# Règle pour compiler les fichiers .c en fichiers .o
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Nettoyage des fichiers objets et de l'exécutable
-clean:
-	rm -f $(OBJ) $(EXEC)
-
-# Nettoyage des fichiers objets seulement
-clean_obj:
-	rm -f $(OBJ)
-
-# Nettoyage complet et recompilation complète
-rebuild: clean all
-
-# Exécution du programme après la compilation
+# Règle pour exécuter le programme
 run: $(EXEC)
 	./$(EXEC)
 
+# Règle pour nettoyer les fichiers objets et l'exécutable
+clean:
+	rm -f $(OBJS) $(EXEC)
