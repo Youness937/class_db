@@ -7,7 +7,7 @@
 // Définition des structures Row et Table
 struct Row {
     int id;
-    char nom_animal[50];
+    char nom[50];
     char race[10];
 };
 
@@ -19,36 +19,36 @@ struct Table {
 // Fonction pour initialiser la table avec des données par défaut
 void initialize_table(struct Table* table) {
     table->rows[0].id = 1;
-    strcpy(table->rows[0].nom_animal, "Max");
+    strcpy(table->rows[0].nom, "Ace");
     strcpy(table->rows[0].race, "chien");
 
     table->rows[1].id = 2;
-    strcpy(table->rows[1].nom_animal, "Bella");
+    strcpy(table->rows[1].nom, "Oreo");
     strcpy(table->rows[1].race, "chat");
 
     table->rows[2].id = 3;
-    strcpy(table->rows[2].nom_animal, "Spirit");
+    strcpy(table->rows[2].nom, "Sousval");
     strcpy(table->rows[2].race, "cheval");
 
-    table->row_count = 3; // Il y a actuellement 3 lignes dans la table
+    table->row_count = 3; // Il y a 3 lignes dans la table
 }
 
 // Fonction pour afficher toutes les lignes de la table
 void print_table(struct Table* table) {
     for (int i = 0; i < table->row_count; i++) {
-        printf("ID: %d, Nom Animal: %s, Race: %s\n", table->rows[i].id, table->rows[i].nom_animal, table->rows[i].race);
+        printf("ID: %d, Prenom: %s, Race: %s\n", table->rows[i].id, table->rows[i].nom, table->rows[i].race);
     }
 }
 
 // Fonction pour insérer une nouvelle ligne dans la table
-void insert_row(struct Table* table, int id, const char* nom_animal, const char* race) {
+void insert_row(struct Table* table, int id, const char* nom, const char* race) {
     if (table->row_count < 100) {
         table->rows[table->row_count].id = id;
-        strcpy(table->rows[table->row_count].nom_animal, nom_animal);
+        strcpy(table->rows[table->row_count].nom, nom);
         strcpy(table->rows[table->row_count].race, race);
         table->row_count++;
     } else {
-        printf("On ne peut plus effectuer d'insert.\n");
+        printf("On ne peut plus accueillir d'animaux.\n");
     }
 }
 
@@ -56,22 +56,22 @@ void insert_row(struct Table* table, int id, const char* nom_animal, const char*
 void select_by_id(struct Table* table, int id) {
     for (int i = 0; i < table->row_count; i++) {
         if (table->rows[i].id == id) {
-            printf("ID: %d, Nom Animal: %s, Race: %s\n", table->rows[i].id, table->rows[i].nom_animal, table->rows[i].race);
+            printf("ID: %d, Nom: %s, Race: %s\n", table->rows[i].id, table->rows[i].nom, table->rows[i].race);
             return;
         }
     }
-    printf("Il n'y a pas de ligne avec cet ID %d\n", id);
+    printf("Il n'y a rien  avec cet ID %d\n", id);
 }
 
 // Fonction pour sélectionner et afficher une ligne par nom d'animal
-void select_by_name(struct Table* table, const char* nom_animal) {
+void select_by_name(struct Table* table, const char* nom) {
     for (int i = 0; i < table->row_count; i++) {
-        if (strcmp(table->rows[i].nom_animal, nom_animal) == 0) {
-            printf("ID: %d, Nom Animal: %s, Race: %s\n", table->rows[i].id, table->rows[i].nom_animal, table->rows[i].race);
+        if (strcmp(table->rows[i].nom, nom) == 0) {
+            printf("ID: %d, Nom: %s, Race: %s\n", table->rows[i].id, table->rows[i].nom, table->rows[i].race);
             return;
         }
     }
-    printf("Pas de ligne avec ce nom d'animal %s\n", nom_animal);
+    printf("Il n'y a personne avec ce prenom %s\n", nom);
 }
 
 // Fonction pour tester le code avec des assertions
@@ -82,25 +82,25 @@ void run_tests() {
     // Test de l'initialisation
     assert(table.row_count == 3);
     assert(table.rows[0].id == 1);
-    assert(strcmp(table.rows[0].nom_animal, "Max") == 0);
+    assert(strcmp(table.rows[0].nom, "Ace") == 0);
     assert(strcmp(table.rows[0].race, "chien") == 0);
 
     // Test d'insertion
-    insert_row(&table, 4, "Milo", "chien");
+    insert_row(&table, 4, "Psst", "chien");
     assert(table.row_count == 4);
     assert(table.rows[3].id == 4);
-    assert(strcmp(table.rows[3].nom_animal, "Milo") == 0);
+    assert(strcmp(table.rows[3].nom, "Psst") == 0);
     assert(strcmp(table.rows[3].race, "chien") == 0);
 
     // Test de sélection par ID
-    select_by_id(&table, 2); // Devrait afficher "Bella"
-    assert(strcmp(table.rows[1].nom_animal, "Bella") == 0);
+    select_by_id(&table, 2);//affiche  "Oreo"
+    assert(strcmp(table.rows[1].nom, "Oreo") == 0);
 
     // Test de sélection par nom
-    select_by_name(&table, "Spirit"); // Devrait afficher "Spirit"
-    assert(strcmp(table.rows[2].nom_animal, "Spirit") == 0);
+    select_by_name(&table, "Sousval");// affiche  "Sousval"
+    assert(strcmp(table.rows[2].nom, "Sousval") == 0);
 
-    printf("Tous les tests ont réussi.\n");
+    printf("Tests réussi.\n");
 }
 
 // Fonction pour analyser les commandes utilisateur et exécuter l'action correspondante
@@ -111,14 +111,14 @@ void execute_command(struct Table* table, const char* command) {
     // Vérifier si la commande est INSERT
     if (strcmp(action, "INSERT") == 0) {
         int id;
-        char nom_animal[50], race[10];
+        char nom[50], race[10];
 
         // Lire les valeurs de la commande INSERT
-        if (sscanf(command, "INSERT %d %49s %9s", &id, nom_animal, race) == 3) {
-            insert_row(table, id, nom_animal, race);
-            printf("Nouvelle ligne : ID=%d, Nom Animal=%s, Race=%s\n", id, nom_animal, race);
+        if (sscanf(command, "INSERT %d %49s %9s", &id, nom, race) == 3) {
+            insert_row(table, id, nom, race);
+            printf("Nouvelle ligne : ID=%d, Prenom=%s, Race=%s\n", id, nom, race);
         } else {
-            printf("Commande invalide. Essayez : INSERT <id> <nom_animal> <race>\n");
+            printf("Essayez : INSERT <id> <nom> <race>\n");
         }
     }
     // Vérifier si la commande est SELECT par ID
@@ -131,17 +131,17 @@ void execute_command(struct Table* table, const char* command) {
             if (sscanf(command, "SELECT id %d", &id) == 1) {
                 select_by_id(table, id);
             } else {
-                printf("Commande invalide pour l'ID. Essayez: SELECT id <id>\n");
+                printf("Essayez: SELECT id <id>\n");
             }
         } else if (strcmp(criteria, "nom") == 0) {
-            char nom_animal[50];
-            if (sscanf(command, "SELECT nom %49s", nom_animal) == 1) {
-                select_by_name(table, nom_animal);
+            char nom[50];
+            if (sscanf(command, "SELECT nom %49s", nom) == 1) {
+                select_by_name(table, nom);
             } else {
-                printf("Commande invalide pour le nom. Essayez: SELECT nom <nom_animal>\n");
+                printf("Essayez: SELECT nom <nom>\n");
             }
         } else {
-            printf("Les critères sont invalides. Utilisez 'id' ou 'nom'.\n");
+            printf("Utilisez 'id' ou 'nom'.\n");
         }
     }
     // Commande pour quitter
@@ -151,7 +151,7 @@ void execute_command(struct Table* table, const char* command) {
     }
     // Si la commande est inconnue
     else {
-        printf("Commande inconnue. Commande valide: INSERT, SELECT, QUIT\n");
+        printf("Commande valide: INSERT, SELECT, QUIT\n");
     }
 }
 
