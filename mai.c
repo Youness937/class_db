@@ -98,14 +98,6 @@ struct Node* delete_node(struct Node* root, int id) {
     return root;
 }
 
-// Fonction pour initialiser les animaux par défaut
-struct Node* initialize_default_animals(struct Node* root) {
-    root = insert_node(root, 1, "Ace", "chien");
-    root = insert_node(root, 2, "Oreo", "chat");
-    root = insert_node(root, 3, "Sousval", "cheval");
-    return root;
-}
-
 // Fonction pour analyser et exécuter les commandes de l'utilisateur
 void execute_command(struct Node** root, const char* command) {
     char action[10];
@@ -144,9 +136,6 @@ void execute_command(struct Node** root, const char* command) {
 int main() {
     struct Node* refuge = NULL;  // L'arbre binaire (racine)
 
-    // Initialiser les animaux par défaut
-    refuge = initialize_default_animals(refuge);
-
     char command[100];
     while (1) {
         printf("\nEntrez une commande (INSERT, SELECT, QUIT) : ");
@@ -154,6 +143,9 @@ int main() {
         command[strcspn(command, "\n")] = 0;  // Supprimer le saut de ligne
 
         execute_command(&refuge, command);
+
+        printf("\nAffichage de l'arbre (in-order):\n");
+        inorder_traversal(refuge);  // Afficher l'arbre après chaque commande
     }
 
     return 0;
